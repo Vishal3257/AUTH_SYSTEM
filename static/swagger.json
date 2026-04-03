@@ -1,0 +1,89 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Auth System API",
+    "version": "1.0.0",
+    "description": "API documentation for User Registration, OTP Login, and Logout"
+  },
+  "paths": {
+    "/api/register/": {
+      "post": {
+        "summary": "User Registration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string", "example": "vishal_dev" },
+                  "email": { "type": "string", "example": "vishal@example.com" },
+                  "password": { "type": "string", "example": "Pass@123" }
+                },
+                "required": ["username", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User created successfully" }
+        }
+      }
+    },
+    "/api/send-otp/": {
+      "post": {
+        "summary": "Send OTP to Email",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "vishal@example.com" }
+                },
+                "required": ["email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP sent successfully" }
+        }
+      }
+    },
+    "/api/login-verify-otp/": {
+      "post": {
+        "summary": "Verify OTP and Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "vishal@example.com" },
+                  "otp": { "type": "string", "example": "123456" }
+                },
+                "required": ["email", "otp"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login successful" }
+        }
+      }
+    },
+    "/api/logout/": {
+      "post": {
+        "summary": "User Logout",
+        "description": "Logs out the current user and clears session.",
+        "responses": {
+          "200": { "description": "Successfully logged out" },
+          "401": { "description": "Not logged in" }
+        }
+      }
+    }
+  }
+}
