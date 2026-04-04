@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from datetime import timedelta
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
@@ -21,7 +22,7 @@ class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
         
-
+@extend_schema(tags=['User Management'])
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
@@ -32,7 +33,7 @@ def register(request):
     return Response(serializer.errors, status=400)
 
 
-
+@extend_schema(tags=['Security & Verification'])
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def send_otp(request):
@@ -56,7 +57,7 @@ def send_otp(request):
     return Response(serializer.errors, status=400)
 
 
-
+@extend_schema(tags=['Authentication'])
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_verify_otp(request):
@@ -87,6 +88,7 @@ def login_verify_otp(request):
     return Response(serializer.errors, status=400)
 
 
+@extend_schema(tags=['Authentication'])
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout(request):
