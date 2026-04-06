@@ -220,14 +220,12 @@ SPECTACULAR_SETTINGS = {
         **Password:** `solution123`  
         
         **Steps to Authorize:**
-        1. Use `/api/login/` with above credentials to get **Access Token**.
-        2. Click **Authorize** button top-right.
+        1. Use `/api/login-verify-otp/` to get **Access Token**.
+        2. Click **Authorize** button (Top-Right).
         3. Paste token and click **Authorize**.
     """,
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    
-    
     'APPEND_COMPONENTS': {
         "securitySchemes": {
             "jwtAuth": {
@@ -237,13 +235,13 @@ SPECTACULAR_SETTINGS = {
             }
         }
     },
-    
     'SECURITY': [
         {
             'jwtAuth': [],
         }
     ],
 }
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
