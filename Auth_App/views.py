@@ -1,5 +1,5 @@
-from drf_spectacular.utils import extend_schema
 from datetime import timedelta
+from drf_spectacular.utils import extend_schema
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
 from django.conf import settings

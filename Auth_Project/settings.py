@@ -195,6 +195,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] # Yeh line add karein
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # Render ke liye zaruri
 
 
+
 from datetime import timedelta
 
 REST_FRAMEWORK = {
@@ -205,15 +206,44 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Django Auth API',
-    'DESCRIPTION': 'Auth App API documentation',
+    'TITLE': 'Auth System API',
+    'DESCRIPTION': """
+        ### 🔐 Testing Credentials
+        **Email:** `shivvilon@gmail.com`  
+        **Password:** `solution123`  
+        
+        **Steps to Authorize:**
+        1. Use `/api/login/` with above credentials to get **Access Token**.
+        2. Click **Authorize** button top-right.
+        3. Paste token and click **Authorize**.
+    """,
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    
+    
+    'APPEND_COMPONENTS': {
+        "securitySchemes": {
+            "jwtAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+            }
+        }
+    },
+    
+    'SECURITY': [
+        {
+            'jwtAuth': [],
+        }
+    ],
 }
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
