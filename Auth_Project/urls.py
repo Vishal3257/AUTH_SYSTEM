@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Auth_App.urls')),
     # Swagger Documentation ka path
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('docs/', TemplateView.as_view(
         template_name='swagger-ui.html'), name='swagger-ui'),
 ]
