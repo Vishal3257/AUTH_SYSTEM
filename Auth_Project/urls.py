@@ -16,14 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
-from drf_spectacular.views import SpectacularAPIView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # Aapki main API urls
     path('', include('Auth_App.urls')),
-    # Swagger Documentation ka path
-path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('docs/', TemplateView.as_view(
-        template_name='swagger-ui.html'), name='swagger-ui'),
+
+    # 1. Yeh schema file generate karega (Backend settings check karega)
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+
+    # 2. Yeh sahi Swagger UI hai jo Authorize button dikhayega
+    path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
