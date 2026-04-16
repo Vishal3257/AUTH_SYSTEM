@@ -11,8 +11,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from Auth_App.serializers import OTPRequestSerializer, OTPVerifySerializer, UserSerializer
 
-# Create your views here.
 User = get_user_model()
+
+
 
 class UserCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -21,8 +22,14 @@ class UserCreateView(generics.CreateAPIView):
 class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-        
-@extend_schema(tags=['User Management'])
+
+
+
+@extend_schema(
+    tags=['User Management'],
+    request=UserSerializer,
+    responses={201: UserSerializer}
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
@@ -33,7 +40,10 @@ def register(request):
     return Response(serializer.errors, status=400)
 
 
-@extend_schema(tags=['Security & Verification'])
+@extend_schema(
+    tags=['Security & Verification'],
+    request=OTPRequestSerializer
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def send_otp(request):
@@ -42,10 +52,10 @@ def send_otp(request):
         email = serializer.validated_data['email']
         try:
             user = User.objects.get(email=email)
-            user.generate_otp()  # Already saves the OTP, no need for separate save()
-            subject = 'OTP'
+            user.generate_otp()  
+            subject = 'Your Login OTP'
             expire_time = user.otp_created_at + timedelta(minutes=5)
-            message = f'Your OTP is: {user.otp}'
+            message = f'Your OTP is: {user.otp}. Valid for 5 minutes.'
             from_email = settings.DEFAULT_FROM_EMAIL
             try:
                 send_mail(subject, message, from_email, [email], fail_silently=False)
@@ -57,7 +67,10 @@ def send_otp(request):
     return Response(serializer.errors, status=400)
 
 
-@extend_schema(tags=['Authentication'])
+@extend_schema(
+    tags=['Authentication'],
+    request=OTPVerifySerializer
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_verify_otp(request):
@@ -67,18 +80,19 @@ def login_verify_otp(request):
         otp = serializer.validated_data['otp']
         try:
             user = User.objects.get(email=email)
-            # Check if OTP exists
+            
             if not user.otp:
                 return Response({'error': 'No OTP generated. Please request OTP first.'}, status=400)
-            # Check if OTP is still valid (within 5 minutes)
+            
             if not user.is_otp_valid():
                 user.otp = None
                 user.save()
                 return Response({'error': 'OTP expired. Please request a new OTP.'}, status=400)
-            # Check if OTP matches
+            
             if str(user.otp) == str(otp):
                 user.otp = None   
                 user.save()
+                # Token based Auth
                 token, created = Token.objects.get_or_create(user=user)
                 return Response({'message': 'OTP verified successfully', 'token': token.key}, status=200)
             else:
@@ -99,4 +113,3 @@ def logout(request):
     except Exception:
         pass
     return Response({'message': 'Logged out successfully'}, status=200)
-
