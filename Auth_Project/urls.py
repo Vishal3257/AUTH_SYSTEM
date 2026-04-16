@@ -21,12 +21,12 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    # Aapki main API urls
+   
     path('', include('Auth_App.urls')),
 
-    # 1. Yeh schema file generate karega (Backend settings check karega)
+    
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 
-    # 2. Yeh sahi Swagger UI hai jo Authorize button dikhayega
+    
     path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]

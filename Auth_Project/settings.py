@@ -215,14 +215,7 @@ REST_FRAMEWORK = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Auth System API',
     'DESCRIPTION': """
-        ### 🔐 Testing Credentials
-        **Email:** `shivvilon@gmail.com`  
-        **Password:** `solution123`  
-        
-        **Steps to Authorize:**
-        1. Use `/api/login-verify-otp/` to get **Access Token**.
-        2. Click **Authorize** button (Top-Right).
-        3. Paste token and click **Authorize**.
+         **Authorize API**.
     """,
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
