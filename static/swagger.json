@@ -17,7 +17,7 @@
                 "type": "object",
                 "properties": {
                   "username": { "type": "string", "example": "vishal_dev" },
-                  "email": { "type": "string", "example": "vishal@example.com" },
+                  "email": { "type": "string", "example": "vt302501@gmail.com" },
                   "password": { "type": "string", "example": "Pass@123" }
                 },
                 "required": ["username", "email", "password"]
@@ -40,7 +40,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": { "type": "string", "example": "vishal@example.com" }
+                  "email": { "type": "string", "example": "vt302501@gmail.com" }
                 },
                 "required": ["email"]
               }
@@ -62,7 +62,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": { "type": "string", "example": "vishal@example.com" },
+                  "email": { "type": "string", "example": "vt302501@gmail.com" },
                   "otp": { "type": "string", "example": "123456" }
                 },
                 "required": ["email", "otp"]
