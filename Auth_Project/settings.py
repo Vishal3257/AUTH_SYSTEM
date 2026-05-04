@@ -42,10 +42,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Environment variables se values read karo (agar .env file exist kare)
 
-# Environment variables se values read karo
-from dotenv import load_dotenv
-load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -120,37 +118,31 @@ WSGI_APPLICATION = 'Auth_Project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-"""import certifi
-ca = certifi.where()
-DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'djongo_mongo_auth',
-        'CLIENT': {
-           'host': 'mongodb+srv://vt464670_db_user:tGWT0e9Wdl6tCiC2@cluster0.hlj8gb9.mongodb.net/djongo_mongo_auth?retryWrites=true&w=majority&tlsAllowInvalidCertificates=true',
-           'tlsCAFile': ca
-        }
-    }
-}"""
-# settings.py mein is tarah modify karein
 
-
-# MongoDB Atlas Configuration
-import certifi
-ca = certifi.where()
+# MongoDB Atlas Configuration - with proper error handling
+try:
+    import certifi
+    ca = certifi.where()
+except (ImportError, AttributeError):
+    ca = None
 
 MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb+srv://vt464670_db_user:tGWT0e9Wdl6tCiC2@cluster0.hlj8gb9.mongodb.net/djongo_mongo_auth?retryWrites=true&w=majority&tlsAllowInvalidCertificates=true')
 
-DATABASES = {
+DATABASE_CONFIG = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'djongo_mongo_auth',
         'CLIENT': {
             'host': MONGODB_URI,
-            'tlsCAFile': ca
         }
     }
 }
+
+# Add tlsCAFile only if certifi is available
+if ca:
+    DATABASE_CONFIG['default']['CLIENT']['tlsCAFile'] = ca
+
+DATABASES = DATABASE_CONFIG
 
 
             
