@@ -14,11 +14,18 @@ from Auth_App.serializers import OTPRequestSerializer, OTPVerifySerializer, User
 User = get_user_model()
 
 
-
+@extend_schema(
+    tags=['User Management'],
+    responses={201: UserSerializer}
+)
 class UserCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+@extend_schema(
+    tags=['User Management'],
+    responses={200: UserSerializer}
+)
 class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer

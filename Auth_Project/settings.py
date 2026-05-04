@@ -43,22 +43,26 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# Environment variables se values read karo
+from dotenv import load_dotenv
+load_dotenv(BASE_DIR / '.env')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'fWynPRmtdFQt1i4N7zlS1EkLVOQGdBOOKa3ESBj_o8Fmx1GYArETag2WGNa1WORd8Lc'
+SECRET_KEY = os.getenv('SECRET_KEY', 'fWynPRmtdFQt1i4N7zlS1EkLVOQGdBOOKa3ESBj_o8Fmx1GYArETag2WGNa1WORd8Lc')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # Development ke liye True hona chahiye
+DEBUG = os.getenv('DEBUG', 'True') == 'True'  # Render par False hona chahiye
 
-ALLOWED_HOSTS = ['*']  # Local testing ke liye sab allowed
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
-# Security settings (Local development me False rakhein)
-SECURE_SSL_REDIRECT = False
-SECURE_HSTS_SECONDS = 0
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+# Security settings - Render par True rakhein
+SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False') == 'True'
+SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '0'))
+SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', 'False') == 'True'
+CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', 'False') == 'True'
 
 
 # Application definition
@@ -131,25 +135,19 @@ DATABASES = {
 # settings.py mein is tarah modify karein
 
 
-# Development ke liye SQLite use kar rahe hain
-# Production mein MongoDB use kar sakte ho
-"""DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}"""
-
-# Agar MongoDB use karna hai to ye settings use karo (MongoDB Atlas):
-
+# MongoDB Atlas Configuration
 import certifi
 ca = certifi.where()
+
+MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb+srv://vt464670_db_user:tGWT0e9Wdl6tCiC2@cluster0.hlj8gb9.mongodb.net/djongo_mongo_auth?retryWrites=true&w=majority&tlsAllowInvalidCertificates=true')
+
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'djongo_mongo_auth',
         'CLIENT': {
-            'host': 'mongodb+srv://vt464670_db_user:tGWT0e9Wdl6tCiC2@cluster0.hlj8gb9.mongodb.net/djongo_mongo_auth?retryWrites=true&w=majority&tlsCAFile=' + certifi.where(),
+            'host': MONGODB_URI,
+            'tlsCAFile': ca
         }
     }
 }
@@ -215,7 +213,7 @@ SPECTACULAR_SETTINGS = {
          **Authorize API**.
     """,
     'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
+    'SERVE_INCLUDE_SCHEMA': True,
     'APPEND_COMPONENTS': {
         "securitySchemes": {
             "jwtAuth": {
@@ -242,26 +240,21 @@ SIMPLE_JWT = {
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 AUTH_USER_MODEL = 'Auth_App.User'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-EMAIL_HOST_USER = 'vt464670@gmail.com'
-EMAIL_HOST_PASSWORD = 'nczgwweqcanuoafs'
-DEFAULT_FROM_EMAIL = 'Django_OTP_API <vt464670@gmail.com>'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'False') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'vt464670@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'nczgwweqcanuoafs')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Django_OTP_API <vt464670@gmail.com>')
 
 #DEFAULT_AUTO_FIELD = 'django_mongodb_backend.fields.ObjectIdAutoField'
-# settings.py ke niche check karein
+# MongoDB ke liye AutoField use kar rahe hain
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 SILENCED_SYSTEM_CHECKS = ["mongodb.E001"]
 
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://127.0.0.1:3000',
-]
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://localhost:8000,http://127.0.0.1:8000,http://127.0.0.1:3000').split(',')
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     'accept',

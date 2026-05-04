@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: auth-system-api
+    env: python
+    buildCommand: bash build.sh
+    startCommand: gunicorn Auth_Project.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: SECRET_KEY
+        sync: false
